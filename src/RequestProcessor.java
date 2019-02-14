@@ -90,21 +90,36 @@ public class RequestProcessor implements Runnable {
   
   
   
-  private void responsePost(String requestLine, Writer out,Reader in) throws IOException
-  {	  
-	  System.out.println("POST情况");
-	  System.out.println(requestLine);
-	  out.write("HTTP/1.1 100 Continue\r\n");
-	  out.flush();
-	  
-	  int temp;
-	  StringBuilder postData = new StringBuilder();
-	  while((temp=in.read())!=-1)
-	  {	
-			postData.append((char)temp);
-	  }
-	  System.out.println(postData.toString());
+  private void responsePost(String requestLine, Writer out, Reader in) throws IOException {
+      System.out.println(requestLine);
+      out.write("HTTP/1.1 100 Continue\r\n");
+      out.flush();
+
+      int contentLength = -1;
+      String inputLine;
+      int blankLine = 0;
+      while (true) {
+          inputLine = readLine(in);
+          if(inputLine.trim().isEmpty()) {
+              if(blankLine == 2) { //遇到真正的空行（head与数据之间那个）时blankLine=2
+                  break;
+              }else {
+                  blankLine++;
+              }
+          }else {
+              blankLine--;
+              if (inputLine.startsWith("Content-Length")) {
+                  contentLength = Integer.parseInt(inputLine.split(":")[1].trim());
+              }
+          }
+      }
+      StringBuilder data = new StringBuilder();
+      while (contentLength > data.length()) {
+          data.append((char) in.read());
+      }
+      System.out.println(data.toString());
   }
+
   private void responseHead(String[] requestLine,Writer out,OutputStream raw,String root) throws IOException
   {
 	  String version = "";
@@ -122,6 +137,7 @@ public class RequestProcessor implements Runnable {
 	
 	      }
   }
+  
   private void responseGet( String[] requestLine,Writer out,OutputStream raw,String root) throws IOException {
 	  String version = "";
 	  String fileName = requestLine[1];
@@ -164,6 +180,22 @@ public class RequestProcessor implements Runnable {
         out.flush();
       }
   }
+  private String readLine(Reader in) {
+      StringBuilder inputLine = new StringBuilder();
+      while (true) {
+          int c;
+          try {
+              c = in.read();
+              if (c == '\r' || c == '\n')
+                  break;
+              inputLine.append((char) c);
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      }
+      return inputLine.toString();
+  }
+  
   private void sendHeader(Writer out, String responseCode,
       String contentType, int length)
       throws IOException {
