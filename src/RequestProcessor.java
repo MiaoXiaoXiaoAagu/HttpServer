@@ -39,6 +39,8 @@ public class RequestProcessor implements Runnable {
                           connection.getOutputStream()
                          );         
       Writer out = new OutputStreamWriter(raw);
+      InputStream postIn=connection.getInputStream();
+    
       Reader in = new InputStreamReader(
                    new BufferedInputStream(
                     connection.getInputStream()
@@ -57,12 +59,24 @@ public class RequestProcessor implements Runnable {
       
       String[] tokens = get.split("\\s+");
       String method = tokens[0];
-      if (method.equals("GET")) {responseGet(tokens,out,raw,root);}
-      else if(method.equals("HEAD"))
-      {
-    	  responseHead(tokens,out,raw,root);
-      }
       
+      if (method.equals("GET")) {responseGet(tokens,out,raw,root);}
+      else if(method.equals("HEAD")){responseHead(tokens,out,raw,root);}
+      else if(method.equals("POST"))
+      {
+    	  responsePost(get,out,in);
+      }
+      else {
+    	  System.out.println("其余情况");
+    	  System.out.println(get);
+    	  int temp;
+		  StringBuilder postData = new StringBuilder();
+		  while((temp=in.read())!=-1)
+		  {	
+				postData.append((char)temp);
+		  }
+		System.out.println(postData.toString());
+      }
     } catch (IOException ex) {
       logger.log(Level.WARNING, 
           "Error talking to " + connection.getRemoteSocketAddress(), ex);
@@ -72,6 +86,24 @@ public class RequestProcessor implements Runnable {
       }
       catch (IOException ex) {} 
     }
+  }
+  
+  
+  
+  private void responsePost(String requestLine, Writer out,Reader in) throws IOException
+  {	  
+	  System.out.println("POST情况");
+	  System.out.println(requestLine);
+	  out.write("HTTP/1.1 100 Continue\r\n");
+	  out.flush();
+	  
+	  int temp;
+	  StringBuilder postData = new StringBuilder();
+	  while((temp=in.read())!=-1)
+	  {	
+			postData.append((char)temp);
+	  }
+	  System.out.println(postData.toString());
   }
   private void responseHead(String[] requestLine,Writer out,OutputStream raw,String root) throws IOException
   {
