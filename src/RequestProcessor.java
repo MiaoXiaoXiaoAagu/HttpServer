@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
@@ -12,6 +13,8 @@ public class RequestProcessor implements Runnable {
   private File rootDirectory;
   private String indexFileName = "index.html";
   private Socket connection;
+  private PostHandle postHandle;
+  private Writer out;
   
   public RequestProcessor(File rootDirectory, 
       String indexFileName, Socket connection) {//init for response method like post\get\put\head
@@ -28,6 +31,7 @@ public class RequestProcessor implements Runnable {
 
     if (indexFileName != null) this.indexFileName = indexFileName;
     this.connection = connection;
+    postHandle = new PostHandle();
   }
   
   @Override
@@ -38,7 +42,7 @@ public class RequestProcessor implements Runnable {
       OutputStream raw = new BufferedOutputStream(
                           connection.getOutputStream()
                          );         
-      Writer out = new OutputStreamWriter(raw);
+      out = new OutputStreamWriter(raw);
       InputStream postIn=connection.getInputStream();
     
       Reader in = new InputStreamReader(
@@ -88,9 +92,7 @@ public class RequestProcessor implements Runnable {
     }
   }
   
-  
-  
-  private void responsePost(String requestLine, Writer out, Reader in) throws IOException {
+  public void responsePost(String requestLine, Writer out, Reader in) throws IOException {
       System.out.println(requestLine);
       out.write("HTTP/1.1 100 Continue\r\n");
       out.flush();
@@ -117,7 +119,14 @@ public class RequestProcessor implements Runnable {
       while (contentLength > data.length()) {
           data.append((char) in.read());
       }
-      System.out.println(data.toString());
+      
+      //String rep = postHandle.handle(data.toString());
+      String rep = "{\n\"status\":\"ok\"\n}";
+      if (this.out != null) {
+          sendHeader(out, "HTTP/1.1 200 OK", "application/json;charset=UTF-8", rep.length());
+          out.write(rep);
+          out.flush();
+      }
   }
 
   private void responseHead(String[] requestLine,Writer out,OutputStream raw,String root) throws IOException
@@ -196,7 +205,7 @@ public class RequestProcessor implements Runnable {
       return inputLine.toString();
   }
   
-  private void sendHeader(Writer out, String responseCode,
+  public static void sendHeader(Writer out, String responseCode,
       String contentType, int length)
       throws IOException {
     out.write(responseCode + "\r\n");
