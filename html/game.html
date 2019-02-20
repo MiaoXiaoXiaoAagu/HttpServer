@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" >
+    <title>Game</title>
+    <style>body{
+        text-align: center;
+    }
+    #gameCanvas{
+        border: 2px solid #666;
+    }
+    .score{
+        display: inline-block;
+        margin: 10px;
+    }
+    #rank{
+        display: none;
+        position:absolute;
+        top: 100px;
+        left: calc(50% - 100px);
+        width: 200px;
+        text-align: center;
+        background-color: lightblue;
+        border: 2px;
+        padding: 20px;
+    }
+    .rankHeader{
+        margin: 10px 10px;
+        font-size: 22px;
+        font-weight: bolder;
+    }
+    </style>
+    <script src="util.js"></script>
+    <script src="DrawBall.js"></script>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="game.js"></script>
+</head>
+<body>
+    <!--<canvas id="gameCanvas" width="1600" height="1000"></canvas>-->
+    <h1>别碰红球</h1>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <br>
+    <div class="score">得分: <span id="scoreNum">0</span> </div>
+    <div class="score"> 历史最高得分: <span id="highScoreNum">0</span></div>
+    <button onclick="location.reload()">重来</button>
+    <div id="rank">
+        <p class="rankHeader">排行榜</p>
+    </div>
+</body>
+</html>

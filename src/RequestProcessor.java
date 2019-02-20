@@ -1,3 +1,4 @@
+package src;
 
 import java.io.*;
 import java.net.*;
@@ -120,8 +121,7 @@ public class RequestProcessor implements Runnable {
           data.append((char) in.read());
       }
       
-      //String rep = postHandle.handle(data.toString());
-      String rep = "{\n\"status\":\"ok\"\n}";
+      String rep = postHandle.handle(data.toString());
       if (this.out != null) {
           sendHeader(out, "HTTP/1.1 200 OK", "application/json;charset=UTF-8", rep.length());
           out.write(rep);

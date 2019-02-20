@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<style>
+    .loginLine{
+        margin: 0 auto;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .logInContain{
+        padding: 100px;
+    }
+</style>
+<body>
+<div class="logInContain">
+    <div class="loginLine">
+        <p>用户名：</p>
+        <input id="username" >
+    </div>
+    <div class="loginLine">
+        <p>密 码：</p>
+        <input id="password" type="password">
+    </div>
+    <div class="loginLine" style="padding: 10px">
+        <input type="submit" id="login_on" value="登录" onclick="login();">
+    </div>
+</div>
+</body>
+<script src="jquery-3.2.1.min.js"></script>
+<script src="logIn.js"></script>
+</html>
