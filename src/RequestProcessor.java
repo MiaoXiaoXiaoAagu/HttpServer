@@ -89,12 +89,14 @@ public class RequestProcessor implements Runnable {
       try {
         connection.close();        
       }
-      catch (IOException ex) {} 
+      catch (IOException ex) {
+          ex.printStackTrace();
+      }
     }
   }
   
   public void responsePost(String requestLine, Writer out, Reader in) throws IOException {
-      System.out.println(requestLine);
+      //System.out.println(requestLine);
       out.write("HTTP/1.1 100 Continue\r\n");
       out.flush();
 

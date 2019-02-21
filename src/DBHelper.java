@@ -97,13 +97,10 @@ public class DBHelper {
 	    	psql.setInt(2,score);
 	    	psql.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	
     }
-
-  
 
     public void updateScore(String username,int socre) {
         try {
@@ -120,19 +117,20 @@ public class DBHelper {
     }
     public List<String> getRank()
     {
-    	sortScores();
-    	List<String> rank=query("score").subList(0,5);
-    	return rank;
+        List<String> scores = new ArrayList<>();
+        try {
+            ResultSet rs = stmt.executeQuery("select * from score order by highScore desc");
+            int count = 0;
+            while (rs.next() && count < 5) {
+                scores.add(rs.getString(1)+","+rs.getInt(2));
+                count += 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return scores;
     }
-    private void sortScores()
-    {
-    	try {
-			stmt.executeQuery("select * from score order by highScore desc");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+
     private String[] getTableColumns(String tableName) {
         String[] columns = null;
         try {

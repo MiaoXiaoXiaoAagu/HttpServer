@@ -19,30 +19,29 @@ public class PostHandle {
 		String password="";
 		String status="";
 		int score = 0;
-		for(int i=0;i<parseData.length;i++)
-		{
-			String key=parseData[i].split(":")[0];
-			key=key.substring(1,key.length()-1);
-			String value=parseData[i].split(":")[1];
-			value=value.substring(1,value.length()-1);
-			
-			//System.out.println("key:"+key+"   value:"+value);
-			if(key.equals("username"))
-			{
-				username=value;
-			}
-			else if(key.equals("status"))
-			{
-				status=value;
-			
-			}
-			else if(key.equals("password")){
-				password=value;
-			}
-			else if(key.equals("score")){
-				score=Integer.parseInt(value);
-			}
-		}
+        for (String parseDatum : parseData) {
+            String key = parseDatum.split(":")[0];
+            key = key.substring(1, key.length() - 1);
+            String value = parseDatum.split(":")[1];
+            value = value.substring(1, value.length() - 1);
+
+            System.out.println("key:"+key+"   value:"+value);
+            switch (key) {
+                case "username":
+                    username = value;
+                    break;
+                case "status":
+                    status = value;
+
+                    break;
+                case "password":
+                    password = value;
+                    break;
+                case "score":
+                    score = Integer.parseInt(value);
+                    break;
+            }
+        }
 	
 		if(status.equals(""))
 		{
@@ -58,15 +57,16 @@ public class PostHandle {
 			updateScore(username,score);
 			String[] rankData=getRank();
 			response ="{\n\"status\":\"ok\""+",\n\"users\":"+rankData[0]
-					+"\n"+",\n\"scores\":"+rankData[1]+"}";
+					+"\n"+",\n\"scores\":"+rankData[1]+"\n}";
 		}
 		else if(statusRecord.equals(status))
 		{
 			int record=getScoreRecord(username);
+			System.out.println("record:"+record);
 			response = "{\n\"status\":\"ok\""+",\n\"scoreRecord\":"+record+"\n}";
 			
 		}
-		System.out.println("status"+status+"postRespons:"+response);
+		System.out.println("status£º"+status+"   postRespons:"+response);
 		return response;
 	}
 	
@@ -123,20 +123,28 @@ public class PostHandle {
 	}
 	private String[] getRank()
 	{//
-		dbHelper.open();
-		List<String> rankList=dbHelper.getRank();
-		String[] rank = new String[]{};;
-		rank[0]="[";
-		rank[1]="[";
-		for(int i=0;i<5;i++)
-		{
-			rank[0]+=rankList.get(i+1).split(",")[0];
-			rank[1]+=rankList.get(i+1).split(",")[1];
-		}
-		rank[0]+="]";
-		rank[1]+="]";
-		dbHelper.close();
-		return rank;//rank[0]=[u1,u2,u3,u4,u5];rank[1]=[s1,s2,s3,s4,s5]
+	    try {
+            dbHelper.open();
+            List<String> rankList=dbHelper.getRank();
+            StringBuilder users = new StringBuilder();
+            StringBuilder scores = new StringBuilder();
+            users.append("[");
+            scores.append("[");
+            for(String r : rankList)
+            {
+                users.append(r.split(",")[0]+",");
+                scores.append(r.split(",")[1]+",");
+            }
+            users.deleteCharAt(users.length()-1);
+            scores.deleteCharAt(scores.length()-1);
+            users.append("]");
+            scores.append("]");
+            dbHelper.close();
+            return new String[]{users.toString(), scores.toString()};//rank[0]=[u1,u2,u3,u4,u5];scores=[s1,s2,s3,s4,s5]
+        } catch (Exception e) {
+	        e.printStackTrace();
+        }
+	    return null;
 	}
 
 	/*
