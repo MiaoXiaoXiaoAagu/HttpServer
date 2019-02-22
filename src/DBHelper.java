@@ -1,5 +1,3 @@
-package src;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +60,7 @@ public class DBHelper {
             while (rs.next()) {
                 StringBuilder line = new StringBuilder();
                 for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                    line.append(rs.getString(i)+",");
+                	if (!rs.getString(i).isEmpty()) line.append(rs.getString(i)+",");
                 }
                 line.deleteCharAt(line.length()-1);
                 rows.add(line.toString());

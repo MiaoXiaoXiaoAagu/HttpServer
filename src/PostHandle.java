@@ -1,5 +1,3 @@
-package src;
-
 import java.util.List;
 
 public class PostHandle {
@@ -56,17 +54,16 @@ public class PostHandle {
 		{
 			updateScore(username,score);
 			String[] rankData=getRank();
-			response ="{\n\"status\":\"ok\""+",\n\"users\":"+rankData[0]
-					+"\n"+",\n\"scores\":"+rankData[1]+"\n}";
+			response ="{\n\"status\": \"ok\""+",\n\"users\": "+rankData[0]
+					+"\n"+",\n\"scores\": "+rankData[1]+"\n}";
 		}
 		else if(statusRecord.equals(status))
 		{
 			int record=getScoreRecord(username);
-			System.out.println("record:"+record);
 			response = "{\n\"status\":\"ok\""+",\n\"scoreRecord\":"+record+"\n}";
 			
 		}
-		System.out.println("status£º"+status+"   postRespons:"+response);
+		System.out.println("status"+status+"postRespons:"+response);
 		return response;
 	}
 	
@@ -132,7 +129,7 @@ public class PostHandle {
             scores.append("[");
             for(String r : rankList)
             {
-                users.append(r.split(",")[0]+",");
+                users.append("\""+r.split(",")[0]+"\",");
                 scores.append(r.split(",")[1]+",");
             }
             users.deleteCharAt(users.length()-1);

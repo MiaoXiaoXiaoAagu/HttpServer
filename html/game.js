@@ -1,4 +1,4 @@
-var urlstring="http://192.168.0.101:80/";
+var urlstring="http://192.168.43.143:80/";
 window.onload = function() {
 
     var canvas = document.getElementById('gameCanvas'),
@@ -13,7 +13,7 @@ window.onload = function() {
         isMouseDown = false,
         mouse = util.captureMouse(canvas),
         anmiRequest;
-    //getScoreRecord();//获取最高分
+    getScoreRecord();//获取最高分
     centerBall.x = canvas.width / 2;
     centerBall.y = canvas.height - ballRadius;
 
@@ -132,6 +132,7 @@ window.onload = function() {
 
         centerBall.draw(cxt);
     }());
+
     function newRecord(score) {
         //判显示是新纪录、上传成绩
         alert("新纪录！");
@@ -150,27 +151,20 @@ window.onload = function() {
             dataType: "json",
             data:JSON.stringify(postData),
             success(data) {
-                console.log(data);
                 if(data.status === "ok") {
                     //返回数据格式{"status":"ok","users":[n1,n2,n3,n4,n5],"scores":[s1,s2,s3,s4,s5]}
                     showTop5(data.users,data.scores);
                 }else if(data.status === "fail") {
                     alert("get scoreRecord wong");
                 }
-            },
-            error(data)
-            {
-                console.log("error");
-                console.log(data);
             }
         });
     }
     function showTop5(names,scores) {
-       for(var i=0;i<5;i++)
-       {
-           var text=i+"."+names[i]+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+scores[i];
-            $("#rank").append($("<p></p>").text(text));
-       }
+       $(".scoreLine").each(function (index) {
+           $(this).children(".scoreUser").text(names[index]);
+           $(this).children(".scoreScore").text(scores[index]);
+       });
         $("#rank").css("display","block");
     }
 

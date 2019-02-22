@@ -25,10 +25,17 @@
         border: 2px;
         padding: 20px;
     }
+    .scoreLine,.scoreTitle{
+        display: flex;
+        justify-content: space-between;
+    }
     .rankHeader{
         margin: 10px 10px;
         font-size: 22px;
         font-weight: bolder;
+    }
+    .scoreUser,.scoreScore{
+        width: 60px;
     }
     </style>
     <script src="util.js"></script>
@@ -46,6 +53,12 @@
     <button onclick="location.reload()">重来</button>
     <div id="rank">
         <p class="rankHeader">排行榜</p>
+        <div class="scoreTitle"><p class="scoreUser">用户名</p><p class="scoreScore">分数</p></div>
+        <div class="scoreLine"><p class="scoreUser"></p><p class="scoreScore"></p></div>
+        <div class="scoreLine"><p class="scoreUser"></p><p class="scoreScore"></p></div>
+        <div class="scoreLine"><p class="scoreUser"></p><p class="scoreScore"></p></div>
+        <div class="scoreLine"><p class="scoreUser"></p><p class="scoreScore"></p></div>
+        <div class="scoreLine"><p class="scoreUser"></p><p class="scoreScore"></p></div>
     </div>
 </body>
 </html>

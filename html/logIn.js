@@ -2,7 +2,7 @@
 //status是login的情况下判断是否是第一次登陆
 //是的话服务器初始化用户信息。
 //不是话就显示出最高成绩
-var urlstring="http://192.168.0.101:80/";
+var urlstring="http://192.168.43.143:80/";
 function login()
 {   var username = $("#username").val();
     var password = $("#password").val();
