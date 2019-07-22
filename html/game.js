@@ -1,4 +1,4 @@
-var urlstring="http://192.168.43.143:80/";
+﻿var urlstring="http://192.168.1.102:8080";
 window.onload = function() {
 
     var canvas = document.getElementById('gameCanvas'),
